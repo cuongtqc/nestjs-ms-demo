@@ -15,4 +15,13 @@ export class AppController {
   calculate(data: number[]) {
     return (data || []).reduce((a, b) => a + b);
   }
+
+  @MessagePattern({cmd: 'luckytime'})
+  async evaluateTime(data: number) {
+    if (data % 2 == 0) {
+      return "true";
+    } else {
+      return "false";
+    }
+  }
 }
