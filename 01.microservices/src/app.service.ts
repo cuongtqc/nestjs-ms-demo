@@ -1,10 +1,10 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, EventPattern } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
   constructor(
-    @Inject('CAL_SERVICE') private clientCal: ClientProxy,
+    @Inject('CAL_SERVICE') private clientCal: ClientProxy
   ) {}
 
   async onApplicationBootstrap() {
@@ -15,10 +15,14 @@ export class AppService {
     return 'Hello from MS 01!';
   }
 
-  async getMs2Calc() {
-    const message = { cmd: 'sum' };
+  async SendData() {
     const data = [1,2,4];
-    return this.clientCal.send(message, data).toPromise();
+    await this.clientCal.emit<any>('sum', data);
+  }
+
+  async HandleCalculated(result: number) {
+    console.log(`Result from MS2: ${result}`);
+    return result;
   }
 
   async getLuckyTime() {
