@@ -10,12 +10,7 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  // @MessagePattern({cmd: 'sum'})
-  // calculate(data: number[]) {
-  //   return (data || []).reduce((a, b) => a + b);
-  // }
-
+  
   @EventPattern('sum')
   async handleCalculate(data: number[]) {
     this.appService.calculate(data);
