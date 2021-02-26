@@ -9,14 +9,6 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
   ) {}
-  
-  // async checkValue() {
-  //   var self = this;
-  //   if (typeof(self.cal_output) == 'undefined') {
-  //     setTimeout(this.checkValue, 50);
-  //     return;
-  //   }
-  // }
 
   @Get()
   getHello(): string {
@@ -26,14 +18,8 @@ export class AppController {
   @Get('/ms2/calc')
   async sendData() {
     await this.appService.SendData();
-    // await this.checkValue();
-    var self=this;
-    function getReturn() {
-      var res;
-      setTimeout(()=>{res = self.cal_output;}, 2000);
-      return res;
-    }
-    return getReturn();
+    console.log(`Result from MS2: ${this.cal_output}`)
+    return this.cal_output;
   }
 
   @EventPattern('calculated')
