@@ -3,14 +3,21 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // const app = await NestFactory.create(AppModule);
+  // await app.listen(3000);
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: { retryAttempts: 5, retryDelay: 3000, port: 3000 },
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'cal_queue',
+      queueOptions: {
+        durable: false
+      },
+    },
   });
 
   await app.startAllMicroservicesAsync();
-  await app.listen(3001);
-  console.log(`02.Microservice application is running on: ${await app.getUrl()}`);
+  console.log(`02. Microservice application is running.`);
 }
 bootstrap();

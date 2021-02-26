@@ -1,9 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseFilters } from '@nestjs/common';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { response } from 'express';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private cal_output; 
+  constructor(
+    private readonly appService: AppService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -11,8 +16,20 @@ export class AppController {
   }
 
   @Get('/ms2/calc')
-  async getMs2Calc() {
-    const res = await this.appService.getMs2Calc();
+  async sendData() {
+    await this.appService.SendData();
+    console.log(`Result from MS2: ${this.cal_output}`)
+    return this.cal_output;
+  }
+
+  @EventPattern('calculated')
+  async handleCalculated(result: number) {
+    this.cal_output = await this.appService.HandleCalculated(result);
+  }
+
+  @Get('/luckytime')
+  async getLuckyTime() {
+    const res = await this.appService.getLuckyTime();
     console.log(`Response from MS 2: `, res);
     return res;
   }

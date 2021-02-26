@@ -1,13 +1,11 @@
+# Experimental branch
 ## Guide
 -- Require: Đã cài đặt nodejs version > 10
-1. Vào thư mục 01.microservices, chạy `npm install && npm run start:dev`. MS 1 sẽ chạy trên port `3000` và sẽ connect tới MS 2 trên port `3001`
-2. Vào thư mục 02.micorservices, chạy `npm install && npm run start:dev`. MS 2 sẽ chạy trên port `3001` và sẽ connect tới MS 1 trên port `3000`
-3. Vào trình duyệt gõ : `http://localhost:3000/ms2/calc` để xem thử kết quả.
+-- Require: Đã cài đặt RabbitMQ ([link cài đặt](https://www.rabbitmq.com/download.html))
+1. Vào thư mục 01.microservices, chạy `npm install && npm run start:dev`. MS 1 sẽ chạy trên port `3000` và sẽ connect tới RabbitMQ server trên port `5672`
+2. Vào thư mục 02.micorservices, chạy `npm install && npm run start:dev`. MS 2 sẽ chạy trên port `3001` và sẽ connect tới RabbitMQ server trên port `5672`
+3. Vào trình duyệt gõ : `http://localhost:15672`, default username : `guest`, default password : `guest`, để xem RabbitMQ management UI.
+4. Vào trình duyệt gõ : `http://localhost:3000/ms2/calc` để xem thử kết quả. <em>**Warning:** Do đang sử dụng event-based messaging và chưa associate được @Get route handler với event nên cần **reload page** lại lần nữa để xem kết quả.<em>
 
 ## Flow demo
-Browser -> MS 01 (Http, Microservice) -> MS 02 (Http, Microservice) -> MS 01 -> Browser
-
-## Improvements
-1. Sử dụng thêm `Pipe, Guard, Interceptor`
-2. Sử dụng một loại `transporter` khác. Hiện tại đang dùng là `TCP` được config trong `main.ts`
-3. Tạo thêm 1 hoặc nhiều MS nữa để demo
+Browser -> MS 01 (Http, Microservice) -> RabbitMQ (AMQP, Message broker) -> MS 02 -> RabbitMQ -> MS 01 -> Browser

@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices/decorators';
+import { EventPattern, MessagePattern } from '@nestjs/microservices/decorators';
 import { AppService } from './app.service';
 
 @Controller()
@@ -10,9 +10,18 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+  
+  @EventPattern('sum')
+  async handleCalculate(data: number[]) {
+    this.appService.calculate(data);
+  }
 
-  @MessagePattern({cmd: 'sum'})
-  calculate(data: number[]) {
-    return (data || []).reduce((a, b) => a + b);
+  @MessagePattern({cmd: 'luckytime'})
+  async evaluateTime(data: number) {
+    if (data % 2 == 0) {
+      return "true";
+    } else {
+      return "false";
+    }
   }
 }
