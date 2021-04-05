@@ -1,35 +1,37 @@
+import { RabbitRPC } from '@golevelup/nestjs-rabbitmq';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientProxy, EventPattern } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
-  constructor(
-    @Inject('CAL_SERVICE') private clientCal: ClientProxy
-  ) {}
+  constructor() {}
 
-  async onApplicationBootstrap() {
-    await this.clientCal.connect()
-  }
+  // async onApplicationBootstrap() {
+  //   await this.clientCal.connect()
+  // }
 
-  getHello(): string {
-    return 'Hello from MS 01!';
-  }
+  // getHello(): string {
+  //   return 'Hello from MS 01!';
+  // }
 
-  async SendData() {
+  @RabbitRPC({
+    exchange: 'exchange1',
+    routingKey: 'rpc-route',
+    queue:'rpc-queue'
+  })
+
+  public async SendData(msg: {}) {
     const data = [1,2,4];
-    await this.clientCal.emit<any>('sum', data);
+    return {
+      response: 42
+    };
   }
 
-  async HandleCalculated(result: number) {
-    console.log(`Result from MS2: ${result}`);
-    return result;
-  }
-
-  async getLuckyTime() {
-    const message = { cmd: 'luckytime' };
-    const date = new Date();
-    const data = date.getMinutes();
-    console.log(data);
-    return this.clientCal.send(message, data).toPromise();
-  }
+  // async getLuckyTime() {
+  //   const message = { cmd: 'luckytime' };
+  //   const date = new Date();
+  //   const data = date.getMinutes();
+  //   console.log(data);
+  //   return this.clientCal.send(message, data).toPromise();
+  // }
 }

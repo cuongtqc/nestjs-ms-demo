@@ -7,11 +7,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'CAL_SERVICE',
+        name: 'CAL2_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'cal_queue',
+          queue: 'cal2_queue',
           queueOptions: {
             durable: false
           }

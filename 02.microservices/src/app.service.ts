@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 export class AppService {
   constructor (
-    @Inject('CAL_SERVICE') private clientCal: ClientProxy
+    @Inject('CAL2_SERVICE') private clientCal: ClientProxy
   ) {}
 
   async onApplicationBootstrap() {    
